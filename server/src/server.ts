@@ -1,6 +1,6 @@
-import Fastify from "fastify"
+import fastify from "fastify"
 import "dotenv/config"
 
-const fastify = Fastify({ logger: true })
+const server = fastify({ logger: true })
 
-fastify.listen({ port: +process.env.PORT!, host: "localhost" })
+server.listen({ port: +process.env.PORT!, host: "0.0.0.0" })
