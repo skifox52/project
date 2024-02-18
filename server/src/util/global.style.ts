@@ -1,6 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 
-export type TcontrollerSignature = (
+export type ControllerSignature = (
   request: FastifyRequest,
   reply: FastifyReply
 ) => Promise<void>
+
+declare module "fastify" {}
