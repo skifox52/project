@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify"
+import { loginService } from "./auth.service"
 
 export const authRouter = (instance: FastifyInstance) => {
-  //   instance.get("/", )
+  instance.post("/login", loginService)
 }
