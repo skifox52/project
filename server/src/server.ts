@@ -1,32 +1,39 @@
-import fastify from "fastify"
+import fastify, { FastifyError, FastifyReply, FastifyRequest } from "fastify"
 import "dotenv/config"
 import fastifyJwt from "@fastify/jwt"
 import fastifyHelmet from "@fastify/helmet"
 import fastifyCors from "@fastify/cors"
 import fastifyBcrypt from "fastify-bcrypt"
 import fastifySwagger from "@fastify/swagger"
-import fastifyCookie from "@fastify/cookie"
 import { authRouter } from "./modules/auth/auth.route"
 import { fastifySwaggerUi } from "@fastify/swagger-ui"
 import { userRoute } from "./modules/user/user.route"
 
 //server init
-export const server = fastify({ logger: true })
+export const app = fastify({ logger: true })
 
 //modules registration
-server.register(fastifyHelmet)
-server.register(fastifyCors, { origin: "0.0.0.0:3000" })
-server.register(fastifyBcrypt, { saltWorkFactor: 12 })
-server.register(fastifySwagger)
-server.register(fastifySwaggerUi)
-server.register(fastifyJwt, {
+app.register(fastifyHelmet)
+app.register(fastifyCors, { origin: "0.0.0.0:3000" })
+app.register(fastifyBcrypt, { saltWorkFactor: 12 })
+app.register(fastifySwagger)
+app.register(fastifySwaggerUi)
+app.register(fastifyJwt, {
   secret: process.env.ACCESS_TOKEN_SECRET as string,
 })
-server.register(fastifyCookie, { hook: "preHandler" })
 
 //routes registration
-server.register(authRouter, { prefix: "api/auth" })
-server.register(userRoute, { prefix: "api/user" })
+app.register(authRouter, { prefix: "api/auth" })
+app.register(userRoute, { prefix: "api/user" })
+
+//Custom error handler
+app.setErrorHandler(
+  (error: FastifyError, request: FastifyRequest, reply: FastifyReply) => {
+    reply
+      .code(error.statusCode || 500)
+      .send({ success: false, error: error.message })
+  }
+)
 
 //app listen
-server.listen({ port: +process.env.PORT!, host: "0.0.0.0" })
+app.listen({ port: +process.env.PORT!, host: "0.0.0.0" })

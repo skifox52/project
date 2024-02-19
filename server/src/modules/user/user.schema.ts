@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { phoneNumberRegex } from "../../util/global"
+import { phoneNumberRegex, returnApiError } from "../../util/global"
 import { buildJsonSchemas } from "fastify-zod"
 
 const registerUserSchema = z.object({
@@ -25,10 +25,7 @@ const registerUserReponse = z.object({
   }),
 })
 
-const registerUserError = z.object({
-  success: z.boolean(),
-  error: z.string(),
-})
+const registerUserError = returnApiError
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>
 export const { schemas: userSchema, $ref } = buildJsonSchemas({

@@ -1,5 +1,9 @@
 import { z } from "zod"
-import { genericErrorMessages, phoneNumberRegex } from "../../util/global"
+import {
+  genericErrorMessages,
+  phoneNumberRegex,
+  returnApiError,
+} from "../../util/global"
 import { buildJsonSchemas } from "fastify-zod"
 
 const { email, minLength, invalid, phone, required } = genericErrorMessages
@@ -24,8 +28,11 @@ const loginResponseSchema = z.object({
   accessToken: z.string(),
 })
 
+const loginResponseError = returnApiError
+
 export type loginInput = z.infer<typeof loginSchema>
 export const { schemas: authSchema, $ref } = buildJsonSchemas({
   loginSchema,
   loginResponseSchema,
+  loginResponseError,
 })

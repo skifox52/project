@@ -14,6 +14,7 @@ export const authRouter = async (server: FastifyInstance) => {
         body: $ref("loginSchema"),
         response: {
           201: $ref("loginResponseSchema"),
+          401: $ref("loginResponseError"),
         },
       },
     },
