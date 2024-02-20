@@ -8,6 +8,7 @@ import fastifySwagger from "@fastify/swagger"
 import { authRouter } from "./modules/auth/auth.route"
 import { fastifySwaggerUi } from "@fastify/swagger-ui"
 import { userRoute } from "./modules/user/user.route"
+import { fastifyCookie } from "@fastify/cookie"
 
 //server init
 export const app = fastify({ logger: true })
@@ -18,6 +19,7 @@ app.register(fastifyCors, { origin: "0.0.0.0:3000" })
 app.register(fastifyBcrypt, { saltWorkFactor: 12 })
 app.register(fastifySwagger)
 app.register(fastifySwaggerUi)
+app.register(fastifyCookie)
 app.register(fastifyJwt, {
   secret: process.env.ACCESS_TOKEN_SECRET as string,
 })

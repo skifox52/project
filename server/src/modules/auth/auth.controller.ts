@@ -3,6 +3,7 @@ import { findUserByCredentials } from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshToken } from "../user/user.service"
+import { ErrorHandler } from "../../util/global"
 
 export const loginUserController = async (
   request: FastifyRequest<{
@@ -13,15 +14,10 @@ export const loginUserController = async (
   const { login, password } = request.body
   const user = await findUserByCredentials(login)
   if (!user) {
-    return reply
-      .code(401)
-      .send({ success: false, message: "Invalid credentials" })
+    throw new ErrorHandler("Invalid credentials", 401)
   } else {
     const passwordMatch = await app.bcrypt.compare(password, user.password)
-    if (!passwordMatch)
-      return reply
-        .code(401)
-        .send({ success: false, message: "Invalid credentials" })
+    if (!passwordMatch) throw new ErrorHandler("Invalid credentials", 401)
     const accessToken = app.jwt.sign({
       id: user.id,
       email: user.email,
@@ -42,3 +38,8 @@ export const loginUserController = async (
       })
   }
 }
+
+export const logoutUserController = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {}

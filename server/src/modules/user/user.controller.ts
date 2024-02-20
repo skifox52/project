@@ -3,6 +3,7 @@ import { RegisterUserInput } from "./user.schema"
 import { createUser, saveRefreshToken } from "./user.service"
 import { app } from "../../server"
 import { findUserByCredentials } from "../auth/auth.service"
+import { ErrorHandler } from "../../util/global"
 
 export const registerUserController = async (
   request: FastifyRequest<{ Body: RegisterUserInput }>,
@@ -22,9 +23,7 @@ export const registerUserController = async (
   } = request.body
 
   const user = await findUserByCredentials(email)
-  if (user) {
-    const error = new Error("User already exist")
-  }
+  if (user) throw new ErrorHandler("User already exist", 400)
 
   const hashedPassword = await app.bcrypt.hash(password)
   const createdUser = await createUser({

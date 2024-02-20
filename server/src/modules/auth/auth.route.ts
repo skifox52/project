@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify"
-import { loginUserController } from "./auth.controller"
+import { loginUserController, logoutUserController } from "./auth.controller"
 import { authSchema, $ref } from "./auth.schema"
 
 export const authRouter = async (server: FastifyInstance) => {
@@ -8,7 +8,7 @@ export const authRouter = async (server: FastifyInstance) => {
   }
 
   server.post(
-    "/",
+    "/login",
     {
       schema: {
         body: $ref("loginSchema"),
@@ -20,4 +20,6 @@ export const authRouter = async (server: FastifyInstance) => {
     },
     loginUserController
   )
+
+  server.delete("/logout", { schema: {} }, logoutUserController)
 }

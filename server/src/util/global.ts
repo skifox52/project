@@ -25,10 +25,10 @@ export const returnApiError = z.object({
 })
 
 //custom error handler
-export function ErrorHandler(message: string, code: number) {
+export function ErrorHandler(message: string, statusCode?: number) {
   const error = new Error(message)
   this.message = error.message
-  this.code = code
+  this.statusCode = statusCode
   if (Error.captureStackTrace) {
     Error.captureStackTrace(this, ErrorHandler)
   } else {
