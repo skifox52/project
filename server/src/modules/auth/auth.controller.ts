@@ -3,7 +3,7 @@ import { findUserByCredentials } from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshToken } from "../user/user.service"
-import { ErrorHandler } from "../../util/global"
+import { ErrorHandler } from "../../util/globals/global"
 
 export const loginUserController = async (
   request: FastifyRequest<{
