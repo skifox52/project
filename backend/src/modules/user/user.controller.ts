@@ -3,7 +3,7 @@ import { RegisterUserInput } from "./user.schema"
 import { createUser, saveRefreshToken } from "./user.service"
 import { app } from "../../server"
 import { findUserByCredentials } from "../auth/auth.service"
-import { ErrorHandler } from "../../util/global"
+import { ErrorHandler } from "../../util/globals/global"
 
 export const registerUserController = async (
   request: FastifyRequest<{ Body: RegisterUserInput }>,
@@ -17,6 +17,7 @@ export const registerUserController = async (
     firstName,
     gender,
     lastName,
+    codeWilaya,
     password,
     phoneNumber,
     role,
@@ -33,6 +34,7 @@ export const registerUserController = async (
     email,
     firstName,
     gender,
+    codeWilaya,
     lastName,
     password: hashedPassword,
     phoneNumber,

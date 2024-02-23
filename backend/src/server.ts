@@ -9,6 +9,7 @@ import { authRouter } from "./modules/auth/auth.route"
 import { fastifySwaggerUi } from "@fastify/swagger-ui"
 import { userRoute } from "./modules/user/user.route"
 import { fastifyCookie } from "@fastify/cookie"
+import { prismaClientInstance } from "./util/globals/prismaClient"
 
 //server init
 export const app = fastify({ logger: true })
@@ -23,7 +24,23 @@ app.register(fastifyCookie)
 app.register(fastifyJwt, {
   secret: process.env.ACCESS_TOKEN_SECRET as string,
 })
-
+//TO REMOVE
+app.get("/setWilaya", async (request, reply) => {
+  console.time("test")
+  const { wilayas } = await import("./util/globals/wilaya")
+  wilayas.forEach(async (w) => {
+    await prismaClientInstance.wilaya.create({
+      data: {
+        id: +w.code,
+        name: w.name,
+        latitude: +w.latitude,
+        longitude: +w.longitude,
+      },
+    })
+  })
+  console.timeEnd("test")
+  reply.code(201).send({ success: true })
+})
 //routes registration
 app.register(authRouter, { prefix: "api/auth" })
 app.register(userRoute, { prefix: "api/user" })

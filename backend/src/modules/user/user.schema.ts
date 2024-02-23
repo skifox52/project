@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { phoneNumberRegex, returnApiError } from "../../util/global"
+import { phoneNumberRegex, returnApiError } from "../../util/globals/global"
 import { buildJsonSchemas } from "fastify-zod"
 
 const registerUserSchema = z.object({
@@ -9,6 +9,7 @@ const registerUserSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   gender: z.enum(["MALE", "FEMALE"]),
+  codeWilaya: z.number(),
   dateOfBirth: z.date(),
   adress: z.string(),
   avatar: z.string(),

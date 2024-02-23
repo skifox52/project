@@ -3,7 +3,7 @@ import {
   genericErrorMessages,
   phoneNumberRegex,
   returnApiError,
-} from "../../util/global"
+} from "../../util/globals/global"
 import { buildJsonSchemas } from "fastify-zod"
 
 const { email, minLength, invalid, phone, required } = genericErrorMessages

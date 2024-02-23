@@ -1,4 +1,4 @@
-import { prismaClientInstance } from "../../util/prismaClient"
+import { prismaClientInstance } from "../../util/globals/prismaClient"
 
 export const findUserByCredentials = async (login: string) => {
   const user = await prismaClientInstance.user.findFirst({
@@ -7,6 +7,8 @@ export const findUserByCredentials = async (login: string) => {
   return user
 }
 
-export const deleteRefreshToken = async (userId: string) => {
-  return await prismaClientInstance.refreshToken.delete({ where: { userId } })
+export const deleteRefreshToken = async (refreshToken: string) => {
+  return await prismaClientInstance.refreshToken.deleteMany({
+    where: { refreshToken },
+  })
 }
