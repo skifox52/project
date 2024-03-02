@@ -1,5 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { deleteRefreshToken, findUserByCredentials } from "./auth.service"
+import {
+  deleteRefreshToken,
+  findUserByCredentials,
+  refreshAccessToken,
+} from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshToken } from "../user/user.service"
@@ -29,6 +33,9 @@ export const loginUserController = async (
     )
     const refreshToken = app.jwt.sign({
       id: user.id,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
     })
     await saveRefreshToken({ userId: user.id, refreshToken })
     return reply
@@ -64,4 +71,19 @@ export const logoutUserController = async (
   } catch (error) {
     throw new ErrorHandler(error, 400)
   }
+}
+
+export const refreshAccessController = async (
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  const accessToken = await refreshAccessToken(
+    request.cookies["refreshToken"] as string
+  )
+  reply.code(201).send({
+    success: true,
+    data: {
+      accessToken,
+    },
+  })
 }

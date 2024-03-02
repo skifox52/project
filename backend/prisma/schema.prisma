@@ -40,6 +40,8 @@ model User {
   updatedAt DateTime @updatedAt
   refreshToken RefreshToken[]
   wilaya Wilaya @relation(fields: [codeWilaya],references: [id])
+  patientAppointments Appointment[] @relation("PatientAppointment")
+  doctorAppointment Appointment[] @relation("DoctorAppointment")
 }
 
 model RefreshToken {
@@ -57,4 +59,18 @@ model Wilaya {
   latitude Float
   longitude  Float
   user User[]
+  appointment Appointment[]
+}
+
+model Appointment {
+  id String @id @default(uuid())
+  patientId String 
+  doctorId String
+  date DateTime
+  duration String
+  adress String
+  codeWilaya Int
+  wilaya Wilaya @relation(fields: [codeWilaya],references: [id])
+  patient User @relation("PatientAppointment",fields: [patientId],references: [id])
+  doctor User @relation("DoctorAppointment",fields: [doctorId],references: [id])
 }

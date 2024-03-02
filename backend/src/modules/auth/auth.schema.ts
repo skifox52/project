@@ -40,6 +40,14 @@ const logoutResponseSchema = z.object({
   }),
 })
 
+//refresh access schema
+const refreshAccessResponse = z.object({
+  success: z.boolean(),
+  data: z.object({
+    accessToken: z.string(),
+  }),
+})
+
 const responseError = returnApiError
 
 export type loginInput = z.infer<typeof loginSchema>
@@ -48,5 +56,6 @@ export const { schemas: authSchema, $ref } = buildJsonSchemas({
   loginSchema,
   loginResponseSchema,
   logoutResponseSchema,
+  refreshAccessResponse,
   responseError,
 })

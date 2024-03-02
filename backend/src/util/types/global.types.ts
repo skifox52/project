@@ -23,3 +23,11 @@ declare module "@fastify/jwt" {
 }
 
 export type Roles = "ADMIN" | "USER" | "DOCTOR"
+
+export type JWT = {
+  id: string
+  email: string
+  phoneNumber: string
+  role: Roles
+  iat?: number
+}

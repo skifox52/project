@@ -48,7 +48,12 @@ export const registerUserController = async (
     phoneNumber: createdUser.phoneNumber,
     role: createdUser.role,
   })
-  const refreshToken = app.jwt.sign({ id: createdUser.id }, { expiresIn: "5m" })
+  const refreshToken = app.jwt.sign({
+    id: createdUser.id,
+    email: createdUser.email,
+    phoneNumber: createdUser.phoneNumber,
+    role: createdUser.role,
+  })
   await saveRefreshToken({ userId: createdUser.id, refreshToken })
   return reply
     .code(201)
