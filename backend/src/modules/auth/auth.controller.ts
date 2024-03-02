@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { findUserByCredentials } from "./auth.service"
+import { deleteRefreshToken, findUserByCredentials } from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshToken } from "../user/user.service"
@@ -50,5 +50,18 @@ export const logoutUserController = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
-  console.log(request.cookies)
+  try {
+    const { count } = await deleteRefreshToken(
+      request.cookies["refreshToken"] as string
+    )
+    if (count === 0) throw new ErrorHandler("Invalid refreshToken", 400)
+    reply.code(200).send({
+      success: true,
+      data: {
+        message: "Logged out successfully",
+      },
+    })
+  } catch (error) {
+    throw new ErrorHandler(error, 400)
+  }
 }

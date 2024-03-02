@@ -8,6 +8,7 @@ import { returnApiError } from "../../util/schemas/global.schema"
 
 const { email, minLength, invalid, phone, required } = genericErrorMessages
 
+//login schemas
 const loginSchema = z.object({
   login: z
     .string({ required_error: required })
@@ -31,11 +32,21 @@ const loginResponseSchema = z.object({
   }),
 })
 
-const loginResponseError = returnApiError
+//logout schema
+const logoutResponseSchema = z.object({
+  success: z.boolean(),
+  data: z.object({
+    message: z.string(),
+  }),
+})
+
+const responseError = returnApiError
 
 export type loginInput = z.infer<typeof loginSchema>
+
 export const { schemas: authSchema, $ref } = buildJsonSchemas({
   loginSchema,
   loginResponseSchema,
-  loginResponseError,
+  logoutResponseSchema,
+  responseError,
 })

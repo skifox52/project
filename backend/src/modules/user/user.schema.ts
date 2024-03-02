@@ -27,16 +27,17 @@ const registerUserReponse = z.object({
   }),
 })
 
+export interface RefreshTokenInput {
+  userId: string
+  refreshToken: string
+}
+
 const registerUserError = returnApiError
 
 export type RegisterUserInput = z.infer<typeof registerUserSchema>
+
 export const { schemas: userSchema, $ref } = buildJsonSchemas({
   registerUserSchema,
   registerUserReponse,
   registerUserError,
 })
-
-export interface RefreshTokenInput {
-  userId: string
-  refreshToken: string
-}
