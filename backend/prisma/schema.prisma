@@ -32,7 +32,7 @@ model User {
   dateOfBirth DateTime
   adress String
   avatar String @default("default-avatar.png")
-  codeWilaya Int @unique
+  codeWilaya Int 
   role UserRole
   latitude Float?
   longitude Float?
@@ -56,5 +56,5 @@ model Wilaya {
   name String
   latitude Float
   longitude  Float
-  user User?
+  user User[]
 }

@@ -2,9 +2,9 @@ import { z } from "zod"
 import {
   genericErrorMessages,
   phoneNumberRegex,
-  returnApiError,
 } from "../../util/globals/global"
 import { buildJsonSchemas } from "fastify-zod"
+import { returnApiError } from "../../util/schemas/global.schema"
 
 const { email, minLength, invalid, phone, required } = genericErrorMessages
 
@@ -23,9 +23,12 @@ const loginSchema = z.object({
 })
 
 const loginResponseSchema = z.object({
-  id: z.string(),
-  login: z.string(),
-  accessToken: z.string(),
+  success: z.boolean(),
+  data: z.object({
+    id: z.string(),
+    login: z.string(),
+    accessToken: z.string(),
+  }),
 })
 
 const loginResponseError = returnApiError

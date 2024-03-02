@@ -1,6 +1,7 @@
 import { z } from "zod"
-import { phoneNumberRegex, returnApiError } from "../../util/globals/global"
+import { phoneNumberRegex } from "../../util/globals/global"
 import { buildJsonSchemas } from "fastify-zod"
+import { returnApiError } from "../../util/schemas/global.schema"
 
 const registerUserSchema = z.object({
   email: z.string().email(),

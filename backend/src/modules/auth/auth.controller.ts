@@ -3,7 +3,7 @@ import { findUserByCredentials } from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshToken } from "../user/user.service"
-import { ErrorHandler } from "../../util/globals/global"
+import { ErrorHandler } from "../../util/globals/ErrorHandler"
 
 export const loginUserController = async (
   request: FastifyRequest<{
@@ -18,20 +18,27 @@ export const loginUserController = async (
   } else {
     const passwordMatch = await app.bcrypt.compare(password, user.password)
     if (!passwordMatch) throw new ErrorHandler("Invalid credentials", 401)
-    const accessToken = app.jwt.sign({
-      id: user.id,
-      email: user.email,
-      phoneNumber: user.phoneNumber,
-      role: user.role,
-    })
+    const accessToken = app.jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+      },
+      { expiresIn: "5m" }
+    )
     const refreshToken = app.jwt.sign({
       id: user.id,
     })
     await saveRefreshToken({ userId: user.id, refreshToken })
-    app.decorate("user", { id: user.id, role: user.role })
     return reply
       .code(201)
-      .setCookie("refreshToken", refreshToken)
+      .setCookie("refreshToken", refreshToken, {
+        domain: "0.0.0.0",
+        httpOnly: true,
+        sameSite: true,
+        // secure: true [in production]
+      })
       .send({
         success: true,
         data: { id: user.id, login: user.email, role: user.role, accessToken },
@@ -42,4 +49,6 @@ export const loginUserController = async (
 export const logoutUserController = async (
   request: FastifyRequest,
   reply: FastifyReply
-) => {}
+) => {
+  console.log(request.cookies)
+}

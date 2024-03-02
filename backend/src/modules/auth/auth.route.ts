@@ -1,12 +1,12 @@
-import { FastifyInstance } from "fastify"
+import { FastifyInstance, RouteHandlerMethod } from "fastify"
 import { loginUserController, logoutUserController } from "./auth.controller"
 import { authSchema, $ref } from "./auth.schema"
+import { app } from "../../server"
 
 export const authRouter = async (server: FastifyInstance) => {
   for (const schema of authSchema) {
     server.addSchema(schema)
   }
-
   server.post(
     "/login",
     {
