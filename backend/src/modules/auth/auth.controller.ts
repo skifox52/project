@@ -1,13 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import {
-  deleteRefreshToken,
-  findUserByCredentials,
-  refreshAccessToken,
+  deleteRefreshTokenService,
+  findUserByCredentialsService,
+  refreshAccessTokenService,
 } from "./auth.service"
 import { loginInput } from "./auth.schema"
 import { app } from "../../server"
-import { saveRefreshToken } from "../user/user.service"
+import { saveRefreshTokenService } from "../user/user.service"
 import { ErrorHandler } from "../../util/globals/ErrorHandler"
+import { JWT_EXPIRATION } from "../../util/globals/config"
 
 export const loginUserController = async (
   request: FastifyRequest<{
@@ -16,7 +17,10 @@ export const loginUserController = async (
   reply: FastifyReply
 ) => {
   const { login, password } = request.body
-  const user = await findUserByCredentials(login)
+  const user = await findUserByCredentialsService({
+    email: login,
+    phoneNumber: login,
+  })
   if (!user) {
     throw new ErrorHandler("Invalid credentials", 401)
   } else {
@@ -29,7 +33,7 @@ export const loginUserController = async (
         phoneNumber: user.phoneNumber,
         role: user.role,
       },
-      { expiresIn: "5m" }
+      { expiresIn: JWT_EXPIRATION }
     )
     const refreshToken = app.jwt.sign({
       id: user.id,
@@ -37,7 +41,7 @@ export const loginUserController = async (
       phoneNumber: user.phoneNumber,
       role: user.role,
     })
-    await saveRefreshToken({ userId: user.id, refreshToken })
+    await saveRefreshTokenService({ userId: user.id, refreshToken })
     return reply
       .code(201)
       .setCookie("refreshToken", refreshToken, {
@@ -58,11 +62,11 @@ export const logoutUserController = async (
   reply: FastifyReply
 ) => {
   try {
-    const { count } = await deleteRefreshToken(
+    const { count } = await deleteRefreshTokenService(
       request.cookies["refreshToken"] as string
     )
     if (count === 0) throw new ErrorHandler("Invalid refreshToken", 400)
-    reply.code(200).send({
+    return reply.code(200).send({
       success: true,
       data: {
         message: "Logged out successfully",
@@ -77,10 +81,10 @@ export const refreshAccessController = async (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
-  const accessToken = await refreshAccessToken(
+  const accessToken = await refreshAccessTokenService(
     request.cookies["refreshToken"] as string
   )
-  reply.code(201).send({
+  return reply.code(201).send({
     success: true,
     data: {
       accessToken,

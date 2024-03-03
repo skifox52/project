@@ -1,27 +1,31 @@
-import { User } from "@prisma/client"
+import { Prisma, User } from "@prisma/client"
 import { prismaClientInstance } from "../../util/globals/prismaClient"
 import { app } from "../../server"
 import { ErrorHandler } from "../../util/globals/ErrorHandler"
 import { JWT } from "../../util/types/global.types"
 
-export const findUserByCredentials = async (
-  login: string
-): Promise<User | null> => {
+export const findUserByCredentialsService = async ({
+  email,
+  phoneNumber,
+}: {
+  email: string
+  phoneNumber: string
+}): Promise<User | null> => {
   const user = await prismaClientInstance.user.findFirst({
-    where: { OR: [{ email: login }, { phoneNumber: login }] },
+    where: { OR: [{ email }, { phoneNumber }] },
   })
   return user
 }
 
-export const deleteRefreshToken = async (
+export const deleteRefreshTokenService = async (
   refreshToken: string
-): Promise<{ count: number }> => {
+): Promise<Prisma.BatchPayload> => {
   return await prismaClientInstance.refreshToken.deleteMany({
     where: { refreshToken },
   })
 }
 
-export const refreshAccessToken = async (
+export const refreshAccessTokenService = async (
   refreshToken: string
 ): Promise<string> => {
   if (

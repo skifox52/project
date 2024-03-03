@@ -15,6 +15,7 @@ const registerUserSchema = z.object({
   adress: z.string(),
   avatar: z.string(),
   role: z.enum(["USER", "DOCTOR", "ADMIN"]),
+  specialitites: z.array(z.string()).optional(),
 })
 
 const registerUserReponse = z.object({

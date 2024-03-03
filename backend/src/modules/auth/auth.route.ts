@@ -1,9 +1,4 @@
-import {
-  FastifyInstance,
-  FastifyReply,
-  FastifyRequest,
-  RouteHandlerMethod,
-} from "fastify"
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import {
   loginUserController,
   logoutUserController,

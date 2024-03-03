@@ -1,10 +1,27 @@
+import { Prisma, RefreshToken, User } from "@prisma/client"
 import { prismaClientInstance } from "../../util/globals/prismaClient"
 import { RefreshTokenInput, RegisterUserInput } from "./user.schema"
 
-export const createUser = async (input: RegisterUserInput) => {
+export const createUserService = async (
+  input: RegisterUserInput
+): Promise<User> => {
   return await prismaClientInstance.user.create({ data: input })
 }
 
-export const saveRefreshToken = async (input: RefreshTokenInput) => {
+export const saveRefreshTokenService = async (
+  input: RefreshTokenInput
+): Promise<RefreshToken> => {
   return await prismaClientInstance.refreshToken.create({ data: input })
+}
+
+export const saveDoctorSpecialitiesService = async (
+  specialities: string[],
+  doctorId: string
+): Promise<Prisma.BatchPayload> => {
+  return await prismaClientInstance.spacialitiesOnDoctors.createMany({
+    data: specialities.map((speciality) => ({
+      doctorId,
+      specialityId: speciality,
+    })),
+  })
 }

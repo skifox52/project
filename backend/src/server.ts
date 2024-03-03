@@ -12,6 +12,7 @@ import { fastifyCookie } from "@fastify/cookie"
 import { prismaClientInstance } from "./util/globals/prismaClient"
 import { ErrorHandler } from "./util/globals/ErrorHandler"
 import { Roles } from "./util/types/global.types"
+import { transporter } from "./util/globals/config"
 
 //server init
 export const app = fastify({ logger: true })
@@ -26,6 +27,7 @@ app.register(fastifyCookie)
 app.register(fastifyJwt, {
   secret: process.env.ACCESS_TOKEN_SECRET as string,
 })
+
 //decorators
 app.decorate(
   "authenticate",
@@ -60,6 +62,17 @@ app.get("/setWilaya", async (request, reply) => {
   })
   console.timeEnd("test")
   reply.code(201).send({ success: true })
+})
+
+app.get("/testmail", async (request, reply) => {
+  await transporter.sendMail({
+    from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>',
+    to: "sayhi.abdelfattah@gmail.com",
+    subject: "Hello ✔",
+    text: "Hello world?",
+    html: "<b>Hello world html?</b>", // html body
+  })
+  reply.send()
 })
 //---------------------
 
