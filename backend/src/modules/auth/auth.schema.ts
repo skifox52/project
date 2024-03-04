@@ -31,6 +31,7 @@ const loginResponseSchema = z.object({
     accessToken: z.string(),
   }),
 })
+export type loginInput = z.infer<typeof loginSchema>
 
 //logout schema
 const logoutResponseSchema = z.object({
@@ -39,6 +40,19 @@ const logoutResponseSchema = z.object({
     message: z.string(),
   }),
 })
+
+//verify email schema
+const verifyEmailShcema = z.object({
+  email: z.string(),
+})
+
+const verifyEmailResponse = z.object({
+  success: z.boolean(),
+  data: z.object({
+    message: z.string(),
+  }),
+})
+export type verifyEmailInput = z.infer<typeof verifyEmailShcema>
 
 //refresh access schema
 const refreshAccessResponse = z.object({
@@ -50,12 +64,12 @@ const refreshAccessResponse = z.object({
 
 const responseError = returnApiError
 
-export type loginInput = z.infer<typeof loginSchema>
-
 export const { schemas: authSchema, $ref } = buildJsonSchemas({
   loginSchema,
   loginResponseSchema,
   logoutResponseSchema,
   refreshAccessResponse,
+  verifyEmailShcema,
+  verifyEmailResponse,
   responseError,
 })

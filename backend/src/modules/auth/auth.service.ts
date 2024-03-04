@@ -17,6 +17,13 @@ export const findUserByCredentialsService = async ({
   return user
 }
 
+export const verifyEmailService = async (email: string): Promise<User> => {
+  return await prismaClientInstance.user.update({
+    where: { email },
+    data: { isActive: true },
+  })
+}
+
 export const deleteRefreshTokenService = async (
   refreshToken: string
 ): Promise<Prisma.BatchPayload> => {

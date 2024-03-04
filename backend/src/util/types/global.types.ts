@@ -31,3 +31,11 @@ export type JWT = {
   role: Roles
   iat?: number
 }
+
+export interface BrevoSmsApiResponse {
+  data: Object
+  status: number
+  statusText: string
+  headers: Object
+  config: Object
+}

@@ -3,6 +3,7 @@ import {
   loginUserController,
   logoutUserController,
   refreshAccessController,
+  verifyEmailController,
 } from "./auth.controller"
 import { authSchema, $ref } from "./auth.schema"
 import { ErrorHandler } from "../../util/globals/ErrorHandler"
@@ -33,6 +34,22 @@ export const authRouter = async (server: FastifyInstance) => {
     },
     loginUserController
   )
+
+  //verify email route
+  server.patch(
+    "/verifyEmail",
+    {
+      schema: {
+        body: $ref("verifyEmailShcema"),
+        response: {
+          200: $ref("verifyEmailResponse"),
+          400: $ref("responseError"),
+        },
+      },
+    },
+    verifyEmailController
+  )
+
   //logout route
   server.delete(
     "/logout",
@@ -48,6 +65,7 @@ export const authRouter = async (server: FastifyInstance) => {
     },
     logoutUserController
   )
+
   //refresh access token route
   server.post(
     "/refresh",
@@ -58,6 +76,7 @@ export const authRouter = async (server: FastifyInstance) => {
           400: $ref("responseError"),
         },
       },
+      onRequest: [server.authenticate()],
       preHandler: isRefreshCookie,
     },
     refreshAccessController

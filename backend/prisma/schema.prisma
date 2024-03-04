@@ -34,6 +34,7 @@ model User {
   avatar String @default("default-avatar.png")
   codeWilaya Int 
   role UserRole
+  isActive Boolean @default(false)
   latitude Float?
   longitude Float?
   createdAt DateTime @default(now()) 
@@ -55,10 +56,10 @@ model Speciality {
 }
 
 model SpacialitiesOnDoctors {
-  user User @relation(fields: [doctorId],references: [id])
+  user User @relation(fields: [doctorId],references: [id], onDelete: Cascade, onUpdate: Cascade)
   doctorId String
 
-  speciality Speciality @relation(fields: [specialityId],references: [id])
+  speciality Speciality @relation(fields: [specialityId],references: [id], onDelete: Cascade, onUpdate: Cascade)
   specialityId String
 
   @@id([doctorId,specialityId])
@@ -71,7 +72,7 @@ model RefreshToken {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt  
   
-  user User @relation(fields: [userId],references: [id])
+  user User @relation(fields: [userId],references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Wilaya {
@@ -96,6 +97,6 @@ model Appointment {
   updatedAt DateTime @updatedAt
   
   wilaya Wilaya @relation(fields: [codeWilaya],references: [id])
-  patient User @relation("PatientAppointment",fields: [patientId],references: [id])
-  doctor User @relation("DoctorAppointment",fields: [doctorId],references: [id])
+  patient User @relation("PatientAppointment",fields: [patientId],references: [id], onDelete: Cascade, onUpdate: Cascade)
+  doctor User @relation("DoctorAppointment",fields: [doctorId],references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

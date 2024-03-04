@@ -3,8 +3,9 @@ import {
   deleteRefreshTokenService,
   findUserByCredentialsService,
   refreshAccessTokenService,
+  verifyEmailService,
 } from "./auth.service"
-import { loginInput } from "./auth.schema"
+import { loginInput, verifyEmailInput } from "./auth.schema"
 import { app } from "../../server"
 import { saveRefreshTokenService } from "../user/user.service"
 import { ErrorHandler } from "../../util/globals/ErrorHandler"
@@ -24,6 +25,8 @@ export const loginUserController = async (
   if (!user) {
     throw new ErrorHandler("Invalid credentials", 401)
   } else {
+    if (!user.isActive)
+      throw new ErrorHandler("Please verify your email adress", 401)
     const passwordMatch = await app.bcrypt.compare(password, user.password)
     if (!passwordMatch) throw new ErrorHandler("Invalid credentials", 401)
     const accessToken = app.jwt.sign(
@@ -54,6 +57,24 @@ export const loginUserController = async (
         success: true,
         data: { id: user.id, login: user.email, role: user.role, accessToken },
       })
+  }
+}
+
+export const verifyEmailController = async (
+  request: FastifyRequest<{ Body: verifyEmailInput }>,
+  reply: FastifyReply
+) => {
+  try {
+    const { email } = request.body
+    await verifyEmailService(email)
+    reply.code(200).send({
+      success: true,
+      data: {
+        message: "Email verified",
+      },
+    })
+  } catch (error) {
+    throw new ErrorHandler(error.message, 400)
   }
 }
 
