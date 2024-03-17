@@ -12,7 +12,7 @@ import { fastifyCookie } from "@fastify/cookie"
 import { prismaClientInstance } from "./util/globals/prismaClient"
 import { ErrorHandler } from "./util/globals/ErrorHandler"
 import { Roles } from "./util/types/global.types"
-import { sendSms, transporter } from "./util/globals/config"
+import { sendSms } from "./util/globals/config"
 
 //server init
 export const app = fastify({ logger: true })

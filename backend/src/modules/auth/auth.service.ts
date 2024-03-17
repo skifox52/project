@@ -43,6 +43,5 @@ export const refreshAccessTokenService = async (
     throw new ErrorHandler("Invalid session", 401)
   const { iat, ...decodedUserData } = app.jwt.verify(refreshToken) satisfies JWT
   const accessToken = app.jwt.sign(decodedUserData)
-  console.log(decodedUserData, accessToken)
   return accessToken
 }

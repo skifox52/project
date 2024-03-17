@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify"
 import { $ref, userSchema } from "./user.schema"
-import { registerUserController } from "./user.controller"
+import { registerUserController, updateUserController } from "./user.controller"
 
 export const userRoute = async (server: FastifyInstance) => {
   userSchema.forEach((s) => {
@@ -19,5 +19,20 @@ export const userRoute = async (server: FastifyInstance) => {
       },
     },
     registerUserController
+  )
+
+  server.patch(
+    "/",
+    {
+      schema: {
+        body: $ref("updateUserSchema"),
+        querystring: $ref("userIdQueryString"),
+        response: {
+          200: $ref("updateUserResponse"),
+          400: $ref("registerUserError"),
+        },
+      },
+    },
+    updateUserController
   )
 }

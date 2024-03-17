@@ -1,9 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { RegisterUserInput } from "./user.schema"
+import { RegisterUserInput, updateuserInput } from "./user.schema"
 import {
   createUserService,
   saveDoctorSpecialitiesService,
   saveRefreshTokenService,
+  updateUserService,
 } from "./user.service"
 import { app } from "../../server"
 import { findUserByCredentialsService } from "../auth/auth.service"
@@ -102,7 +103,15 @@ export const registerUserController = async (
     })
 }
 
-export const updateUser = async (
-  request: FastifyRequest,
+export const updateUserController = async (
+  request: FastifyRequest<{
+    Body: updateuserInput
+    Querystring: { id: string }
+  }>,
   reply: FastifyReply
-) => {}
+) => {
+  await updateUserService(request.query.id, request.body)
+  //check if user exist
+
+  //then update
+}

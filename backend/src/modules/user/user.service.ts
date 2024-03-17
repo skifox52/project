@@ -1,6 +1,10 @@
 import { Prisma, RefreshToken, User } from "@prisma/client"
 import { prismaClientInstance } from "../../util/globals/prismaClient"
-import { RefreshTokenInput, RegisterUserInput } from "./user.schema"
+import {
+  RefreshTokenInput,
+  RegisterUserInput,
+  updateuserInput,
+} from "./user.schema"
 
 export const createUserService = async (
   input: RegisterUserInput
@@ -24,4 +28,11 @@ export const saveDoctorSpecialitiesService = async (
       specialityId: speciality,
     })),
   })
+}
+
+export const updateUserService = async (
+  id: string,
+  data: updateuserInput
+): Promise<User> => {
+  return await prismaClientInstance.user.update({ where: { id }, data })
 }
